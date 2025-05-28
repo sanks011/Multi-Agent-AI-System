@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: multi-agent-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  app:
+    build: .
+    container_name: multi-agent-app
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-AIzaSyBUreDq4nkfHM9oycP_WzJYKhYAEU0_YFY}
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./samples:/app/samples
+      - ./output_logs:/app/output_logs
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - app-network
+
+volumes:
+  redis-data:
+
+networks:
+  app-network:
+    driver: bridge

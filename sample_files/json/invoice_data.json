@@ -1,0 +1,78 @@
+{
+  "invoice": {
+    "invoiceNumber": "INV-2025-0578",
+    "issueDate": "2025-05-15",
+    "dueDate": "2025-06-15",
+    "currency": "USD",
+    "status": "UNPAID",
+    "vendor": {
+      "name": "Global Tech Solutions",
+      "id": "VEN-45678",
+      "address": {
+        "line1": "500 Technology Plaza",
+        "line2": "Suite 1200",
+        "city": "San Francisco",
+        "state": "CA",
+        "zipCode": "94105",
+        "country": "USA"
+      },
+      "taxId": "82-1234567",
+      "contactEmail": "ar@globaltechsolutions.com",
+      "contactPhone": "415-555-7890"
+    },
+    "customer": {
+      "name": "Pinnacle Industries Ltd",
+      "id": "CUST-12345",
+      "address": {
+        "line1": "1250 Enterprise Way",
+        "city": "Chicago",
+        "state": "IL",
+        "zipCode": "60601",
+        "country": "USA"
+      },
+      "contactPerson": "Lisa Chen",
+      "contactEmail": "ap@pinnacle-industries.com"
+    },
+    "items": [
+      {
+        "description": "Enterprise Software License - 1 Year",
+        "quantity": 1,
+        "unitPrice": 24999.99,
+        "subtotal": 24999.99,
+        "taxRate": 0
+      },
+      {
+        "description": "Implementation Services",
+        "quantity": 80,
+        "unitUnit": "hours",
+        "unitPrice": 150.00,
+        "subtotal": 12000.00,
+        "taxRate": 8.5
+      },
+      {
+        "description": "Premium Support Plan",
+        "quantity": 1,
+        "unitPrice": 5000.00,
+        "subtotal": 5000.00,
+        "taxRate": 8.5
+      }
+    ],
+    "summary": {
+      "subtotal": 41999.99,
+      "taxAmount": 1445.00,
+      "shipping": 0.00,
+      "discount": 2000.00,
+      "discountReason": "Loyalty customer - 5% off implementation",
+      "total": 41444.99
+    },
+    "paymentTerms": "Net 30",
+    "paymentInstructions": {
+      "bankName": "First National Bank",
+      "accountName": "Global Tech Solutions Inc.",
+      "accountNumber": "XXXX-XXXX-7890",
+      "routingNumber": "XXXXX0123",
+      "swiftCode": "FNBUS12345"
+    },
+    "notes": "Please reference invoice number with payment. For questions, contact ar@globaltechsolutions.com"
+  }
+}

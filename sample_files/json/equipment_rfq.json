@@ -1,0 +1,49 @@
+{
+  "orderRequest": {
+    "id": "RFQ-2025-05-1234",
+    "requestType": "Standard",
+    "dateSubmitted": "2025-05-29T09:30:00Z",
+    "customer": {
+      "id": "CUST-7891",
+      "name": "Acme Manufacturing Inc.",
+      "contactPerson": "Michael Johnson",
+      "email": "m.johnson@acmemanufacturing.com",
+      "phone": "555-789-1234"
+    },
+    "items": [
+      {
+        "sku": "PROD-A1001",
+        "description": "Industrial Compressor Model XL-500",
+        "quantity": 5,
+        "unitPrice": null,
+        "preferredSpecs": {
+          "capacity": "50 CFM",
+          "powerRequirement": "380V",
+          "certifications": ["CE", "ISO9001"]
+        }
+      },
+      {
+        "sku": "PROD-B2502",
+        "description": "Hydraulic Pressure Valve HV-90",
+        "quantity": 20,
+        "unitPrice": null,
+        "preferredSpecs": {
+          "pressureRating": "500 psi",
+          "material": "Stainless Steel 316"
+        }
+      }
+    ],
+    "deliveryRequirements": {
+      "preferredDate": "2025-06-15",
+      "shippingMethod": "Express",
+      "destinationAddress": {
+        "street": "123 Industrial Parkway",
+        "city": "Metropolis",
+        "state": "NY",
+        "zipCode": "10001",
+        "country": "USA"
+      }
+    },
+    "additionalNotes": "Please provide pricing options for bulk discounts. We may increase order quantity based on pricing tiers. Also include warranty information in your quote."
+  }
+}
