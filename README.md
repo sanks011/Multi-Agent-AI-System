@@ -482,10 +482,10 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 🆘 Support & Contact
 
-- **Documentation**: [GitHub Wiki](https://github.com/your-repo/wiki)
-- **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-repo/discussions)
-- **Email**: support@your-domain.com
+- **Documentation**: [GitHub Wiki](https://github.com/sanks011/Multi-Agent-AI-System/wiki)
+- **Issues**: [GitHub Issues](https://github.com/sanks011/Multi-Agent-AI-System/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/sanks011/Multi-Agent-AI-System/discussions)
+- **Email**: sankalpasarkar68@gmail.com
 
 ---
 
@@ -505,6 +505,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ---
 
-**🚀 Built with ❤️ using Python, FastAPI, Redis, and Google Gemini AI**
+**🚀 Built with ❤️ by Sankalpa using Python, FastAPI, Redis, and Google Gemini AI**
 
 *Ready for production deployment with enterprise-grade features and comprehensive testing.*
