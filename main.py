@@ -7,6 +7,7 @@ from agents.pdf_agent import PDFAgent
 import os
 import json
 import logging
+import base64
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -71,6 +72,17 @@ async def process_api_input(request: dict = Body(...)):
         source = request.get("source", "input.txt")
         input_data = request.get("input_data", "")
         
+        # Debug logging
+        logging.info(f"API received - source: {source}, input_data type: {type(input_data)}")
+        if isinstance(input_data, dict):
+            logging.info(f"Input data keys: {list(input_data.keys())}")
+        
+        # Handle PowerShell objects that wrap content in a "value" property
+        if isinstance(input_data, dict) and "value" in input_data and len(input_data) > 3:
+            # This looks like a PowerShell object with metadata, extract just the value
+            logging.info("Detected PowerShell object wrapper, extracting value")
+            input_data = input_data["value"]
+        
         # If source is a file path, just use the filename for saving
         if "/" in source:
             filename = source.split("/")[-1]
@@ -83,8 +95,59 @@ async def process_api_input(request: dict = Body(...)):
             with open(file_path, "w") as f:
                 json.dump(input_data, f)
         else:
-            with open(file_path, "w") as f:
-                f.write(str(input_data))
+            # Check if this might be base64 PDF data
+            is_base64_pdf = False
+            logging.info(f"Checking if input is base64 PDF: data_type={type(input_data)}, length={len(str(input_data))}")
+            
+            if isinstance(input_data, str) and len(input_data) > 100:
+                # Check for PDF base64 signature and PDF file extension
+                starts_with_jvberi = input_data.startswith('JVBERi')
+                has_pdf_in_source = (source.lower().endswith('.pdf') or 'pdf' in source.lower())
+                logging.info(f"Base64 PDF check 1: starts_with_JVBERi={starts_with_jvberi}, has_pdf_in_source={has_pdf_in_source}")
+                
+                if starts_with_jvberi and has_pdf_in_source:
+                    is_base64_pdf = True
+                    logging.info("Detected base64 PDF via signature + extension")
+                # Also check if we can decode it and it starts with PDF header
+                elif len(input_data) > 20:
+                    try:
+                        # Try to decode first 20 characters to check for PDF header
+                        padded_sample = input_data[:20] + '=' * (4 - len(input_data[:20]) % 4)
+                        decoded_sample = base64.b64decode(padded_sample)
+                        if decoded_sample.startswith(b'%PDF'):
+                            is_base64_pdf = True
+                            logging.info("Detected base64 PDF via decode test")
+                    except Exception as decode_test_error:
+                        logging.debug(f"Base64 decode test failed: {decode_test_error}")
+            
+            logging.info(f"Final is_base64_pdf decision: {is_base64_pdf}")
+            
+            if is_base64_pdf:
+                # This is base64 PDF data, decode and save as binary
+                try:
+                    # Add padding if needed for complete string
+                    padded_data = input_data + '=' * (4 - len(input_data) % 4)
+                    decoded_pdf = base64.b64decode(padded_data)
+                    
+                    # Verify it's actually a PDF
+                    if decoded_pdf.startswith(b'%PDF'):
+                        with open(file_path, "wb") as f:
+                            f.write(decoded_pdf)
+                        logging.info(f"Successfully decoded and saved PDF binary data to {file_path}, size: {len(decoded_pdf)}")
+                    else:
+                        logging.warning("Decoded data doesn't start with PDF header, saving as text")
+                        with open(file_path, "w") as f:
+                            f.write(str(input_data))
+                except Exception as decode_error:
+                    logging.error(f"Failed to decode base64 PDF: {decode_error}")
+                    # Fallback to text file
+                    with open(file_path, "w") as f:
+                        f.write(str(input_data))
+            else:
+                # Regular text data
+                logging.info("Saving as regular text file")
+                with open(file_path, "w") as f:
+                    f.write(str(input_data))
                 
         # Process the file
         return await process_file(file_path, source)
@@ -103,8 +166,7 @@ async def process_file(file_path: str, source: str):
         # Route to appropriate agent
         result = None
         if input_type == 'JSON':
-            result, anomalies = json_agent.process(file_path, thread_id)
-            result['anomalies'] = anomalies
+            result = json_agent.process(file_path, thread_id)
         elif input_type == 'Email':
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
